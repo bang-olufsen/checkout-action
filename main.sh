@@ -147,7 +147,7 @@ echo "${GITHUB_PROTOCOL}://${GIT_USERNAME}:${INPUT_TOKEN}@${GITHUB_HOSTNAME}" >>
 
 #g git remote remove origin || true
 #g git remote add origin "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
-
+echo "GITHUB_REF#refs/heads/: ${GITHUB_REF#refs/heads/}"
 g git config --local gc.auto 0
 
 if [[ "${GITHUB_REF}" == "refs/heads/"* ]]; then
