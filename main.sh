@@ -133,6 +133,12 @@ fi
 
 g git version
 
+g echo "GITHUB_REF=${GITHUB_REF}, GITHUB_SHA=${GITHUB_SHA}"
+
+g printenv
+
+g rm -rf *
+
 g git config --global --add safe.directory "${wd}"
 
 g git init
