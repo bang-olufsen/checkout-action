@@ -145,7 +145,8 @@ GIT_USERNAME="dummy"
 g git config --global credential.helper store
 echo "${GITHUB_PROTOCOL}://${GIT_USERNAME}:${INPUT_TOKEN}@${GITHUB_HOSTNAME}" >> ~/.git-credentials
 
-# g git remote add origin "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" || true
+g git remote remove origin || true
+g git remote add origin "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
 
 g git config --local gc.auto 0
 
