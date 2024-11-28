@@ -150,6 +150,9 @@ g git remote add origin "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
 
 g git config --local gc.auto 0
 
+g git config --global credential.helper store
+echo "${GITHUB_PROTOCOL}://${GIT_USERNAME}:${INPUT_TOKEN}@${GITHUB_HOSTNAME}" >> ~/.git-credentials
+
 if [[ "${GITHUB_REF}" == "refs/heads/"* ]]; then
     branch="${GITHUB_REF#refs/heads/}"
     remote_ref="refs/remotes/origin/${branch}"
