@@ -133,27 +133,25 @@ fi
 
 g git version
 
-g echo "GITHUB_REF=${GITHUB_REF}, GITHUB_SHA=${GITHUB_SHA}"
-
-g printenv
-
-g rm -rf *
-
 g git config --global --add safe.directory "${wd}"
 
 g git init
 
-
 GITHUB_PROTOCOL="${GITHUB_SERVER_URL%%://*}"
 GITHUB_HOSTNAME="${GITHUB_SERVER_URL#*://}"
 GIT_USERNAME="dummy"
+GIT_CREDENTIALS="${GITHUB_PROTOCOL}://${GIT_USERNAME}:${INPUT_TOKEN}@${GITHUB_HOSTNAME}"
 
 g git config --global credential.helper store
-echo "${GITHUB_PROTOCOL}://${GIT_USERNAME}:${INPUT_TOKEN}@${GITHUB_HOSTNAME}" >> ~/.git-credentials
 
-#g git remote remove origin || true
-#g git remote add origin "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
-echo "GITHUB_REF#refs/heads/: ${GITHUB_REF#refs/heads/}"
+if ! grep -q "${GIT_CREDENTIALS}" ~/.git-credentials 2>/dev/null; then
+    echo "${GIT_CREDENTIALS}" >> ~/.git-credentials
+fi
+
+if ! git remote -v | grep -qw origin; then
+    g git remote add origin "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
+fi
+
 g git config --local gc.auto 0
 
 if [[ "${GITHUB_REF}" == "refs/heads/"* ]]; then
