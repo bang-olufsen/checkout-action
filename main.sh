@@ -148,11 +148,22 @@ if ! grep -q "${GIT_CREDENTIALS}" ~/.git-credentials 2>/dev/null; then
     echo "${GIT_CREDENTIALS}" >> ~/.git-credentials
 fi
 
+g echo "Removing previously created refs, to avoid conflicts"
+g git rev-parse --symbolic-full-name --verify --quiet HEAD || true
+
+g echo "Cleaning the repository"
+g git clean -ffdx
+
+if [[ ! -z $(git show-ref HEAD) ]]; then
+  g git reset --hard HEAD
+fi
+
+g echo "Disabling automatic garbage collection"
+g git config --local gc.auto 0
+
 if ! git remote -v | grep -qw origin; then
     g git remote add origin "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
 fi
-
-g git config --local gc.auto 0
 
 if [[ "${GITHUB_REF}" == "refs/heads/"* ]]; then
     branch="${GITHUB_REF#refs/heads/}"
@@ -160,11 +171,10 @@ if [[ "${GITHUB_REF}" == "refs/heads/"* ]]; then
     g retry git fetch --no-tags --prune --no-recurse-submodules --depth=1 origin "+${GITHUB_SHA}:${remote_ref}"
     g retry git checkout --force -B "${branch}" "${remote_ref}"
 else
-    g retry git fetch --no-tags --prune --no-recurse-submodules --depth=1 origin "+${GITHUB_SHA}:${GITHUB_REF}"
-    g retry git checkout --force "${GITHUB_REF}"
+    remote_ref="refs/remortes/pull${GITHUB_REF#refs/pull}"
+    g git -c protocol.version=2 fetch --prune --progress --no-recurse-submodules origin '+refs/heads/*:refs/remotes/origin/*' "+${GITHUB_SHA}:${remote_ref}"
+    g git checkout --progress --force "${remote_ref}"
 fi
-
-g git config --global --add safe.directory "${wd}"
 
 if [[ "${INPUT_PERSIST_CREDENTIALS}" != "true" ]]; then
     rm ~/.git-credentials
