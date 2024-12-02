@@ -131,6 +131,7 @@ if ! type -P git &>/dev/null; then
     esac
 fi
 
+g stat yocto
 g rm -rf yocto
 
 g git version
