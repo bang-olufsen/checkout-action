@@ -154,7 +154,7 @@ g git rev-parse --symbolic-full-name --verify --quiet HEAD || true
 g echo "Cleaning the repository"
 g git clean -ffdx
 
-if [[ ! -z $(git show-ref HEAD) ]]; then
+if [[ -n $(git show-ref HEAD) ]]; then
   g git reset --hard HEAD
 fi
 
@@ -171,7 +171,7 @@ if [[ "${GITHUB_REF}" == "refs/heads/"* ]]; then
     g retry git fetch --no-tags --prune --no-recurse-submodules --depth=1 origin "+${GITHUB_SHA}:${remote_ref}"
     g retry git checkout --force -B "${branch}" "${remote_ref}"
 else
-    remote_ref="refs/remortes/pull${GITHUB_REF#refs/pull}"
+    remote_ref="refs/remotes/pull${GITHUB_REF#refs/pull}"
     g git -c protocol.version=2 fetch --prune --progress --no-recurse-submodules origin '+refs/heads/*:refs/remotes/origin/*' "+${GITHUB_SHA}:${remote_ref}"
     g git checkout --progress --force "${remote_ref}"
 fi
