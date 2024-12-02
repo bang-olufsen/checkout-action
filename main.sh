@@ -131,6 +131,8 @@ if ! type -P git &>/dev/null; then
     esac
 fi
 
+g rm -rf yocto
+
 g git version
 
 g git config --global --add safe.directory "${wd}"
