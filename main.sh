@@ -132,6 +132,7 @@ if ! type -P git &>/dev/null; then
 fi
 
 g rm -rf *
+g rm -rf .*
 
 g git version
 
