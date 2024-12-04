@@ -131,9 +131,6 @@ if ! type -P git &>/dev/null; then
     esac
 fi
 
-g rm -rf * || true
-g rm -rf .* || true
-
 g git version
 
 g git config --global --add safe.directory "${wd}"
