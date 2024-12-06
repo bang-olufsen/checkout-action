@@ -135,6 +135,9 @@ g git version
 
 g git config --global --add safe.directory "${wd}"
 
+# turn the detached message off
+g git config --global advice.detachedHead false
+
 g git init
 
 GITHUB_PROTOCOL="${GITHUB_SERVER_URL%%://*}"
