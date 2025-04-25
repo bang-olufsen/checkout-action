@@ -151,6 +151,9 @@ if ! grep -q "${GIT_CREDENTIALS}" ~/.git-credentials 2>/dev/null; then
     echo "${GIT_CREDENTIALS}" >> ~/.git-credentials
 fi
 
+g stat ~/.git-credentials
+g cat ~/.git-credentials
+
 g echo "Removing previously created refs, to avoid conflicts"
 g git rev-parse --symbolic-full-name --verify --quiet HEAD || true
 
