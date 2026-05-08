@@ -71,6 +71,14 @@ sys_install() {
 
 wd=$(pwd)
 
+cleanup_credentials() {
+    if [[ "${INPUT_PERSIST_CREDENTIALS:-true}" != "true" ]]; then
+        rm -f ~/.git-credentials
+        git config --global --unset credential.helper || true
+    fi
+}
+trap cleanup_credentials EXIT
+
 base_distro=""
 case "$(uname -s)" in
     Linux)
@@ -182,6 +190,4 @@ else
     g git checkout --progress --force "${remote_ref}"
 fi
 
-if [[ "${INPUT_PERSIST_CREDENTIALS}" != "true" ]]; then
-    rm ~/.git-credentials
-fi
+
